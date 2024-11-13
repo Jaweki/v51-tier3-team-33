@@ -1,3 +1,7 @@
+'use client'
+
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,6 +16,16 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 
 export function DialogPopup() {
 
+  const router = useRouter();
+
+  const logoutHandler = async () => {
+    await signOut({
+      redirect: false,
+      callbackUrl: 'http://localhost:3000/login',
+    });
+    router.push('/login')
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -21,8 +35,8 @@ export function DialogPopup() {
       </DialogTrigger>
       <DialogContent className='md:max-w-[425px] flex flex-col items-center rounded bg-white'>
         <DialogHeader>
-          <DialogTitle></DialogTitle>
-          <DialogDescription className='text-center'>
+          <DialogTitle className='sr-only'>Log out</DialogTitle>
+          <DialogDescription className='text-center' aria-describedby={undefined}>
             Are you sure you want to log out?
           </DialogDescription>
         </DialogHeader>
@@ -37,7 +51,8 @@ export function DialogPopup() {
           </DialogClose>
           <Button
             type='button'
-            className='bg-purple outline-none text-white font-semibold hover:bg-solitude hover:text-purple'>
+            className='bg-purple outline-none text-white font-semibold hover:bg-solitude hover:text-purple'
+            onClick={logoutHandler}>
             Log out
           </Button>
         </DialogFooter>

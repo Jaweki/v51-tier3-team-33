@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import OAuthSessionProvider from "./global-ui/next-auth-client/OAuthSessionProvider";
+import { UserProvider } from "./context/UserContext";
+import { Toaster } from "@/components/ui/toaster";
+import Footer from "./global-ui/Footer";
+import GlobalProviders from "./global-ui/GlobalProviders";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,8 +20,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "WeSplit | Expense tracker",
-  description:
-    "Developed by Chingu.io member: @Jaweki, @José, @Radhika, @Gary, @Olga, @Lidia",
+  description: "Developed by Chingu.io members: @Gary, @Olga, @Radhika, @Lidia",
 };
 
 export default function RootLayout({
@@ -30,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <OAuthSessionProvider>{children}</OAuthSessionProvider>
+        <GlobalProviders>{children}</GlobalProviders>
       </body>
     </html>
   );

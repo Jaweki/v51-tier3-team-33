@@ -1,30 +1,40 @@
+'use client';
 import * as React from 'react';
-
+import { useUserContext } from '@/app/context/UserContext';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-);
+import { format } from 'date-fns';
 
 export default function RecentActivity() {
-    return (
-      <div className='md:flex-1'>
-        <h2 className='mb-2'>Recent activity:</h2>
-        <ScrollArea className='h-64 w-full rounded-md border bg-muted'>
-          <div className='p-4'>
-            {tags.map((tag) => (
-              <>
-                <div
-                  key={tag}
-                  className='text-sm'>
-                  {tag}
-                </div>
-                <Separator className='my-2' />
-              </>
-            ))}
-          </div>
-        </ScrollArea>
-      </div>
-    );
+  const { userExpenses } = useUserContext();
+
+  //sort expenses from most recent
+   const sortedExpenses = [...userExpenses].sort((a, b) => {
+     return new Date(b.date).getTime() - new Date(a.date).getTime();
+   });
+  //console.log('sorted', sortedExpenses)
+  return (
+    <div className='md:flex-1'>
+      <h2 className='mb-2'>Recent activity:</h2>
+      <ScrollArea className='h-64 w-full rounded-md border bg-muted'>
+        <ul className='p-4'>
+          {sortedExpenses.map((expense) => (
+            <li key={expense._id}>
+              <p className='text-sm'>
+                You paid{' '}
+                <span className='text-purple font-bold'>
+                  {expense.contribution.toFixed(2)}
+                </span>{' '}
+                for {expense.name} on{' '}
+                <span className='text-sm text-gray-400'>
+                  {format(new Date(expense.date), 'MMMM dd, yyyy')}
+                </span>
+              </p>
+              <Separator className='my-2' />
+            </li>
+          ))}
+        </ul>
+      </ScrollArea>
+    </div>
+  );
 }
